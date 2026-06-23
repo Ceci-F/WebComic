@@ -1,0 +1,11 @@
+/* styles/pagina-4.css */
+
+/* Los paneles transparentes se mantienen arriba */
+.comic-p4 .grupo-paneles img {
+    z-index: 5;
+}
+
+/* Seleccionamos específicamente la imagen final y la mandamos al fondo */
+.comic-p4 .grupo-paneles img[src*="pag_4_fin"] {
+    z-index: 1;
+}

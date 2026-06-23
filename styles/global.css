@@ -1,0 +1,83 @@
+@import url("./pagina-1.css");
+@import url("./pagina-2.css");
+@import url("./pagina-3.css");
+@import url("./pagina-4.css");
+
+/* styles/global.css */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden; /* Prohíbe cualquier scroll */
+    background-color: #111; /* Fondo oscuro del lector */
+    font-family: sans-serif;
+}
+
+.escenario-3d {
+    perspective: 2000px;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.pagina-comic {
+    position: absolute;
+    top: 0;
+    /* ALINEACIÓN ESTILO REVISTA: Ocupa la mitad derecha de la pantalla */
+    left: 50vw; 
+    width: 50vw;
+    height: 100vh;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    backface-visibility: hidden;
+    box-sizing: border-box;
+}
+
+/* El contenedor interno mide exactamente el alto restante de la pantalla */
+.grupo-paneles {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    min-height: 0; /* Evita estrictamente que las imágenes estiren el contenedor */
+    overflow: hidden;
+}
+
+/* Forzamos a que CUALQUIER imagen de panel herede el tamaño máximo de la página sin salirse */
+.grupo-paneles img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Encoge y escala de forma perfecta sin desbordar */
+}
+
+/* Barra inferior de botones */
+.navegacion {
+    height: 65px;
+    flex-shrink: 0; /* Evita que la barra colapse */
+    padding: 0 20px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+    z-index: 100;
+}
+
+.link-transicion {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #222;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+.link-transicion:hover {
+    background-color: #444;
+}

@@ -1,0 +1,4 @@
+/* Control de superposición limpia para la página 3 */
+.comic-p3 .grupo-paneles img {
+    z-index: 5;
+}
