@@ -1,4 +1,12 @@
-/* Control de superposición limpia para la página 3 */
+/* styles/pagina-3.css */
+
+/* Todas las imágenes comparten el mismo tamaño restringido por el contenedor */
 .comic-p3 .grupo-paneles img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
     z-index: 5;
 }

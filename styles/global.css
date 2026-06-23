@@ -36,23 +36,21 @@ html, body {
     box-sizing: border-box;
 }
 
-/* El contenedor interno mide exactamente el alto restante de la pantalla */
+/* El contenedor interno ahora ocupa toda la altura de la pantalla al 100% */
 .grupo-paneles {
     position: relative;
     width: 100%;
-    flex: 1;
-    min-height: 0; /* Evita estrictamente que las imágenes estiren el contenedor */
+    height: 100vh; /* Cambiamos a 100vh exacto porque ya no hay barra de botones */
     overflow: hidden;
 }
 
-/* Forzamos a que CUALQUIER imagen de panel herede el tamaño máximo de la página sin salirse */
 .grupo-paneles img {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Encoge y escala de forma perfecta sin desbordar */
+    object-fit: contain; 
 }
 
 /* Barra inferior de botones */

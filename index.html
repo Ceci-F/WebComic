@@ -1,33 +1,35 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webcomic - Página 1</title>
     <link rel="stylesheet" href="styles/global.css">
 </head>
+
 <body>
 
     <div class="escenario-3d">
-        <main id="contenedor-principal" class="pagina-comic comic-p1">
-            
+        <main id="contenedor-principal" class="pagina-comic comic-p1" data-next="pages/page-2.html">
             <div class="grupo-paneles">
-                <img src="./assets/images/pagina-1/pag_1_line1-2.png" alt="Panel 1-2">
-                <img src="./assets/images/pagina-1/pag_1_line_3_.png" alt="Panel 3">
-                <img src="./assets/images/pagina-1/pag_1_line_4.png" alt="Panel 4">
-                <img src="./assets/images/pagina-1/pag_1_line_5.png" alt="Panel 5">
-                <img src="./assets/images/pagina-1/pag_1_line_6.jpg" alt="Panel 6">
-            </div>
-            
-            <div class="navegacion">
-                <div></div>
-                <a href="pages/page-2.html" class="link-transicion">Siguiente &#8594;</a>
-            </div>
+                
+                <img src="./assets/images/pagina-1/pag_1_line1-2.png" alt="Panel 1-2" data-reveal="always-on">
+                
+                <img src="./assets/images/pagina-1/pag_1_line_3_.png" alt="Panel 3" data-reveal="click">
+                
+                <img src="./assets/images/pagina-1/pag_1_line_4.png" alt="Panel 4" data-reveal="delay" data-tiempo="500">
+                
+                <img src="./assets/images/pagina-1/pag_1_line_5.png" alt="Panel 5" data-reveal="delay" data-tiempo="500">
+                
+                <img src="./assets/images/pagina-1/pag_1_line_6.jpg" alt="Fondo JPG" data-reveal="click">
 
+            </div>
         </main>
     </div>
 
     <script src="./scripts/modules/gsap.min.js"></script>
     <script type="module" src="./scripts/main.js"></script>
 </body>
+
 </html>

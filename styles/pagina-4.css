@@ -1,11 +1,16 @@
 /* styles/pagina-4.css */
 
-/* Los paneles transparentes se mantienen arriba */
 .comic-p4 .grupo-paneles img {
-    z-index: 5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    z-index: 5; /* Los paneles flotan arriba */
 }
 
-/* Seleccionamos específicamente la imagen final y la mandamos al fondo */
+/* Fuerza a la imagen pintada de desenlace a irse detrás */
 .comic-p4 .grupo-paneles img[src*="pag_4_fin"] {
     z-index: 1;
 }

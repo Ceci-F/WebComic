@@ -1,30 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medidas Exactas</title>
+    <title>Webcomic - Página 4</title>
+    <link rel="stylesheet" href="../styles/global.css">
 </head>
-
 <body>
-    <main id="contenedor-principal" class="pagina-comic comic-p4">
-        <div class="grupo-paneles">
-            <img src="../assets/images/pagina-4/pag_4_line_1.png" alt="Panel 1">
-            <img src="../assets/images/pagina-4/pag_4_line_2.png" alt="Panel 2">
-            <img src="../assets/images/pagina-4/pag_4_line_3.png" alt="Panel 3">
-            <img src="../assets/images/pagina-4/pag_4_line_4.png" alt="Panel 4">
-            <img src="../assets/images/pagina-4/pag_4_line_5.png" alt="Panel 5">
-            <img src="../assets/images/pagina-4/pag_4_fin.png" alt="Panel Fin">
-        </div>
-        <div class="navegacion">
-            <a href="page-3.html" class="link-transicion">&#8592; Anterior</a>
-            <div class="link-transicion" style="opacity: 0.5; cursor: not-allowed;">Fin</div>
-        </div>
-    </main>
+
+    <div class="escenario-3d">
+        <main id="contenedor-principal" class="pagina-comic comic-p4" data-prev="page-3.html">
+            <div class="grupo-paneles">
+                
+                <img src="../assets/images/pagina-4/pag_4_line_1.png" alt="Panel 1" data-reveal="always-on">
+                
+                <img src="../assets/images/pagina-4/pag_4_line_2.png" alt="Panel 2" data-reveal="click">
+                
+                <img src="../assets/images/pagina-4/pag_4_line_3.png" alt="Panel 3" data-reveal="click">
+                <img src="../assets/images/pagina-4/pag_4_line_4.png" alt="Panel 4" data-reveal="delay" data-tiempo="500">
+                <img src="../assets/images/pagina-4/pag_4_line_5.png" alt="Panel 5" data-reveal="delay" data-tiempo="1000">
+                
+                <img src="../assets/images/pagina-4/pag_4_fin.png" alt="Panel Fin" data-reveal="click">
+
+            </div>
+        </main>
+    </div>
 
     <script src="../scripts/modules/gsap.min.js"></script>
-    <script src="../scripts/main.js" type="module"></script>
+    <script src="../scripts/main.js"></script>
 </body>
-
 </html>
