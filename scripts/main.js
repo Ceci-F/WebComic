@@ -20,7 +20,8 @@ function inicializarDimensiones() {
     const paginas = document.querySelectorAll('.pagina-comic');
     paginas.forEach(pagina => {
         pagina.style.width = "50vw";
-        pagina.style.left = "50vw";
+        pagina.style.left = "50%";
+        pagina.style.transform = "translateX(-50%)";
     });
 }
 
@@ -471,7 +472,8 @@ function iniciarBarba() {
                     const tl = gsap.timeline({ onComplete: resolve });
 
                     page.style.width = "50vw";
-                    page.style.left = "50vw";
+                    page.style.left = "50%";
+                    page.style.transform = "translateX(-50%)";
 
                     if (direccionTransicion === 'adelante') {
                         gsap.set(page, { opacity: 0, zIndex: 1 });

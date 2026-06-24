@@ -20,13 +20,16 @@ html, body {
     height: 100vh;
     position: relative;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .pagina-comic {
     position: absolute;
     top: 0;
-    /* ALINEACIÓN ESTILO REVISTA: Ocupa la mitad derecha de la pantalla */
-    left: 50vw; 
+    left: 50%;
+    transform: translateX(-50%);
     width: 50vw;
     height: 100vh;
     background-color: #ffffff;
