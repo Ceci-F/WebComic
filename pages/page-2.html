@@ -1,78 +1,42 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Webcomic - Página 2</title>
-    <link rel="stylesheet" href="../styles/global.css" />
-  </head>
-  <body>
-    <div class="escenario-3d" data-barba="wrapper">
-      <main
-        id="contenedor-principal"
-        class="pagina-comic comic-p2"
-        data-barba="container"
-        data-barba-namespace="comic"
-        data-next="page-3.html"
-        data-prev="../index.html"
-      >
-        <div class="grupo-paneles">
-          <img
-            src="../assets/images/pagina-2/pag_2_line_1.png"
-            alt="Panel 1"
-            data-reveal="always-on"
-          />
-          <img
-            src="../assets/images/pagina-2/pag_2_line1_5.png"
-            alt="Panel 1.5"
-            data-reveal="delay"
-            data-tiempo="500"
-          />
-          <img
-            src="../assets/images/pagina-2/pag_2_line_2.png"
-            alt="Panel 2"
-            data-reveal="click"
-          />
-          <img
-            src="../assets/images/pagina-2/pag_2_line_3.png"
-            alt="Panel 3"
-            data-reveal="click"
-          />
-          <img
-            src="../assets/images/pagina-2/pag_2_line_4.png"
-            alt="Panel 4"
-            data-reveal="delay"
-            data-tiempo="300"
-          />
-          <img
-            src="../assets/images/pagina-2/pag_2_line_5.png"
-            alt="Panel 5"
-            data-reveal="delay"
-            data-tiempo="300"
-          />
-          <img
-            src="../assets/images/pagina-2/pag_2_line_6.png"
-            alt="Panel 6"
-            data-reveal="delay"
-            data-tiempo="300"
-          />
-          <img
-            src="../assets/images/pagina-2/pag_2_line_7.png"
-            alt="Panel 7"
-            data-reveal="click"
-          />
-          <img
-            src="../assets/images/pagina-2/pag_2_line_8.png"
-            alt="Panel 8"
-            data-reveal="delay"
-            data-tiempo="600"
-          />
-        </div>
-      </main>
-    </div>
 
-    <script src="https://unpkg.com/@barba/core"></script>
-    <script src="../scripts/modules/gsap.min.js"></script>
-    <script type="module" src="../scripts/main.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Webcomic - Página 2</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+</head>
+
+<body>
+  <div class="escenario-3d" data-barba="wrapper">
+    <main id="contenedor-principal" class="pagina-comic comic-p2" data-barba="container" data-barba-namespace="comic"
+      data-next="page-3.html" data-prev="../index.html">
+      <div class="grupo-paneles">
+        <img src="../assets/images/pagina-2/pag_2_line_1.png" alt="Panel 1" data-reveal="always-on" />
+        <img src="../assets/images/pagina-2/pag_2_line1_5.png" alt="Panel 1.5" data-reveal="delay" data-tiempo="500" data-sfx="../assets/audio/pag2_1_5.mp3" />
+        <img src="../assets/images/pagina-2/page2_Cuadro_Texto1.png" alt="Texto 1" data-reveal="delay" data-tiempo="500"/>
+        <img src="../assets/images/pagina-2/pag_2_line_2.png" alt="Panel 2" data-reveal="click" />
+        <img src="../assets/images/pagina-2/pag_2_line_3.png" alt="Panel 3" data-reveal="click" data-sfx="../assets/audio/pag2_3.mp3" data-sfx-duration="1000" />
+        <img src="../assets/images/pagina-2/page2_Cuadro_Texto2.png" alt="Texto 2" data-reveal="click" />
+        <img src="../assets/images/pagina-2/pag_2_line_4.png" alt="Panel 4" data-reveal="click"/>
+        <div data-sfx="../assets/audio/pag2_4-6.mp3" data-sfx-duration="2000">
+          <img src="../assets/images/pagina-2/pag_2_line_5.png" alt="Panel 5" data-reveal="delay" data-tiempo="600" />
+          <img src="../assets/images/pagina-2/pag_2_line_6.png" alt="Panel 6" data-reveal="delay" data-tiempo="600" />
+          <img src="../assets/images/pagina-2/page2_Cuadro_Texto3.png" alt="Texto 3" data-reveal="delay" data-tiempo="800"/>
+        </div>
+        <img src="../assets/images/pagina-2/pag_2_line_7.png" alt="Panel 7" data-reveal="click" />
+        <div data-reveal-group="texto-4">
+          <img src="../assets/images/pagina-2/page2_Cuadro_Texto4.png" alt="Texto 4" data-reveal="delay" data-tiempo="0" />
+        </div>
+        <img src="../assets/images/pagina-2/pag_2_line_8.png" alt="Panel 8" data-reveal="delay" data-tiempo="250" data-sfx="../assets/audio/pag2_8.mp3" data-sfx-duration="3100" data-effect="shake" data-effect-strength-start="0.3" data-effect-strength-step="0.1"/>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/@barba/core"></script>
+  <script src="../scripts/modules/gsap.min.js"></script>
+  <script type="module" src="../scripts/main.js"></script>
+</body>
+
 </html>
