@@ -2,23 +2,29 @@ let panelesSecuencia = [];
 let panelActualIndex = 0;
 let timeoutActual = null;
 let transicionEnProceso = false;
+let direccionTransicion = 'adelante'; 
 
 document.addEventListener("DOMContentLoaded", () => {
     inicializarDimensiones();
     inicializarMotorDePaneles();
+    iniciarBarba(); 
 });
 
 function inicializarDimensiones() {
-    const pagina = document.querySelector('#contenedor-principal');
-    if (pagina) {
+    // Nos aseguramos de aplicar los tamaños a todas las páginas que existan
+    const paginas = document.querySelectorAll('.pagina-comic');
+    paginas.forEach(pagina => {
         pagina.style.width = "50vw";
         pagina.style.left = "50vw";
-    }
+    });
 }
 
 // 1. EL MOTOR QUE PREPARA LA PÁGINA
 function inicializarMotorDePaneles() {
-    const contenedor = document.querySelector('#contenedor-principal');
+    // Al usar Barba, a veces hay dos contenedores en pantalla durante un segundo.
+    // Siempre tomamos el último, que es la página nueva en la que estamos leyendo.
+    const contenedores = document.querySelectorAll('.pagina-comic');
+    const contenedor = contenedores[contenedores.length - 1]; 
     if(!contenedor) return;
 
     panelesSecuencia = Array.from(contenedor.querySelectorAll('.grupo-paneles img'));
@@ -27,33 +33,30 @@ function inicializarMotorDePaneles() {
 
     const estadoInicial = contenedor.getAttribute('data-estado-inicial');
 
-    // Si el usuario presionó volver atrás, la página aparece con TODO revelado
     if (estadoInicial === 'final') {
         panelActualIndex = panelesSecuencia.length;
         panelesSecuencia.forEach(img => gsap.set(img, { opacity: 1 }));
         return; 
     }
 
-    // Comportamiento normal hacia adelante: Ocultar todo lo que no sea always-on
     let encontroNoAlwaysOn = false;
     panelesSecuencia.forEach((img) => {
         const tipo = img.getAttribute('data-reveal') || 'always-on';
         if (tipo === 'always-on' && !encontroNoAlwaysOn) {
             gsap.set(img, { opacity: 1 });
-            panelActualIndex++; // Avanzamos el índice por los que ya están visibles
+            panelActualIndex++; 
         } else {
             encontroNoAlwaysOn = true;
             gsap.set(img, { opacity: 0 });
         }
     });
 
-    // Encendemos el motor para procesar el primero que esté oculto
     procesarSiguientePanel();
 }
 
 // 2. EL CEREBRO DE LA SECUENCIA
 function procesarSiguientePanel() {
-    if (panelActualIndex >= panelesSecuencia.length) return; // Ya no hay paneles
+    if (panelActualIndex >= panelesSecuencia.length) return; 
 
     const img = panelesSecuencia[panelActualIndex];
     const tipo = img.getAttribute('data-reveal');
@@ -63,10 +66,10 @@ function procesarSiguientePanel() {
         timeoutActual = setTimeout(() => {
             revelarImagen(panelActualIndex);
             panelActualIndex++;
-            procesarSiguientePanel(); // Se llama a sí mismo para continuar la cadena
+            procesarSiguientePanel(); 
         }, tiempo);
     } else if (tipo === 'click') {
-        // Nos detenemos por completo y esperamos al evento de clic global
+        // Esperamos al evento global de clic
     }
 }
 
@@ -76,24 +79,34 @@ function revelarImagen(index) {
     gsap.to(img, { opacity: 1, duration: 0.5, ease: "power2.out" });
 }
 
-// 3. EVENTO GLOBAL DE CLIC EN LA PANTALLA
+function normalizarUrl(url) {
+    try {
+        return new URL(url, window.location.href).href;
+    } catch {
+        return url;
+    }
+}
+
+// 3. EVENTO GLOBAL DE CLIC 
 document.addEventListener('click', (evento) => {
+    // Si la hoja ya se está moviendo, ignoramos cualquier otro toque
     if (transicionEnProceso) return; 
 
-    const contenedor = document.querySelector('#contenedor-principal');
+    const contenedores = document.querySelectorAll('.pagina-comic');
+    const contenedor = contenedores[contenedores.length - 1];
     if(!contenedor) return;
 
-    // Detectamos si el clic fue en el lado izquierdo (Retroceder)
     const clickEnIzquierda = evento.clientX < (window.innerWidth * 0.3);
 
     if (clickEnIzquierda) {
         const prevUrl = contenedor.getAttribute('data-prev');
-        if (prevUrl) transicionPagina(prevUrl, 'atras');
+        if (prevUrl) {
+            direccionTransicion = 'atras';
+            transicionEnProceso = true; // Bloqueo instantáneo
+            barba.go(normalizarUrl(prevUrl));
+        }
     } else {
-        // Clic en el resto de la pantalla (Avanzar)
         if (panelActualIndex < panelesSecuencia.length) {
-            
-            // Si estaba cargando un delay pero el usuario hizo clic, forzamos que aparezca ya
             if (timeoutActual) {
                 clearTimeout(timeoutActual);
                 timeoutActual = null;
@@ -101,97 +114,119 @@ document.addEventListener('click', (evento) => {
                 panelActualIndex++;
                 procesarSiguientePanel();
             } else {
-                // Estaba detenido esperando un clic normal
                 const img = panelesSecuencia[panelActualIndex];
                 if (img && img.getAttribute('data-reveal') === 'click') {
                     revelarImagen(panelActualIndex);
                     panelActualIndex++;
-                    procesarSiguientePanel(); // Desbloqueamos la secuencia
+                    procesarSiguientePanel(); 
                 }
             }
         } else {
-            // Ya todos los paneles están revelados. ¡Pasar página!
             const nextUrl = contenedor.getAttribute('data-next');
-            if (nextUrl) transicionPagina(nextUrl, 'adelante');
+            if (nextUrl) {
+                direccionTransicion = 'adelante';
+                transicionEnProceso = true; // Bloqueo instantáneo
+                barba.go(normalizarUrl(nextUrl));
+            }
         }
     }
 });
 
-// 4. LÓGICA DE PASAR LA HOJA EN 3D
-async function transicionPagina(url, direccion) {
-    transicionEnProceso = true;
-    const escenario = document.querySelector('.escenario-3d');
-    const paginaActual = document.querySelector('#contenedor-principal');
+// 4. EL NUEVO MOTOR DE TRANSICIONES 3D (BARBA + GSAP)
+function iniciarBarba() {
+    barba.init({
+        preventRunning: true,
+        sync: true, // Esto obliga a mantener las dos páginas encima para el efecto 3D
+        transitions: [{
+            name: 'efecto-revista',
+            leave(data) {
+                return new Promise(resolve => {
+                    transicionEnProceso = true;
+                    const page = data.current.container;
 
-    try {
-        const respuesta = await fetch(url);
-        const htmlTexto = await respuesta.text();
+                    if (!page) {
+                        resolve();
+                        return;
+                    }
 
-        const parser = new DOMParser();
-        const htmlParseado = parser.parseFromString(htmlTexto, 'text/html');
-        const nuevaPagina = htmlParseado.querySelector('#contenedor-principal');
+                    const tl = gsap.timeline({ onComplete: resolve });
 
-        if (!nuevaPagina) { transicionEnProceso = false; return; }
+                    if (direccionTransicion === 'adelante') {
+                        const sombra = document.createElement('div');
+                        sombra.className = 'sombra-pliegue';
+                        page.appendChild(sombra);
 
-        window.history.pushState({}, '', url);
+                        gsap.set(page, { transformOrigin: "bottom left", zIndex: 10 });
+                        
+                        tl.to(sombra, { opacity: 1, duration: 1.2, ease: "power2.inOut" }, 0)
+                          .to(page, {
+                            rotationY: -110,
+                            rotationZ: -8,
+                            xPercent: -10,
+                            opacity: 0,
+                            duration: 1.2,
+                            ease: "power2.inOut"
+                        }, 0);
+                    } else {
+                        gsap.set(page, { zIndex: 1 });
+                        tl.to(page, { opacity: 0, duration: 0.8 }, 0);
+                    }
+                });
+            },
+            enter(data) {
+                return new Promise(resolve => {
+                    const page = data.next.container;
 
-        nuevaPagina.style.width = "50vw";
-        nuevaPagina.style.left = "50vw";
+                    // ESCUDO PROTECTOR: Si la página nueva no tiene las etiquetas, 
+                    // forzamos una recarga segura para no romper la experiencia.
+                    if (!page) {
+                        window.location.href = data.next.url.href;
+                        resolve();
+                        return;
+                    }
 
-        // Si vamos hacia atrás, le ponemos la etiqueta 'final' para que el motor revele todo de golpe
-        if (direccion === 'atras') {
-            nuevaPagina.setAttribute('data-estado-inicial', 'final');
-            const imagenesNuevas = nuevaPagina.querySelectorAll('.grupo-paneles img');
-            imagenesNuevas.forEach(img => gsap.set(img, { opacity: 1 }));
-        } else {
-            // Si vamos hacia adelante pre-ocultamos lo que no sea always-on para que no parpadee
-            const imagenesNuevas = nuevaPagina.querySelectorAll('.grupo-paneles img');
-            let encontroNoAlwaysOn = false;
-            imagenesNuevas.forEach(img => {
-                const tipo = img.getAttribute('data-reveal') || 'always-on';
-                if (tipo === 'always-on' && !encontroNoAlwaysOn) {
-                    gsap.set(img, { opacity: 1 });
-                } else {
-                    encontroNoAlwaysOn = true;
-                    gsap.set(img, { opacity: 0 });
-                }
-            });
-        }
+                    const tl = gsap.timeline({ onComplete: resolve });
 
-        escenario.appendChild(nuevaPagina);
+                    page.style.width = "50vw";
+                    page.style.left = "50vw";
 
-        if (direccion === 'adelante') {
-            gsap.set(nuevaPagina, { zIndex: 1 });
-            gsap.set(paginaActual, { zIndex: 2, transformOrigin: "left center" });
+                    if (direccionTransicion === 'adelante') {
+                        gsap.set(page, { opacity: 0, zIndex: 1 });
+                        tl.to(page, { opacity: 1, duration: 1.2, ease: "power2.inOut" }, 0);
+                    } else {
+                        gsap.set(page, { 
+                            transformOrigin: "bottom left", 
+                            rotationY: -110, 
+                            rotationZ: -8,
+                            xPercent: -10,
+                            opacity: 0,
+                            zIndex: 10 
+                        });
+                        
+                        const sombra = document.createElement('div');
+                        sombra.className = 'sombra-pliegue';
+                        sombra.style.opacity = 1;
+                        page.appendChild(sombra);
 
-            gsap.to(paginaActual, {
-                rotationY: -110, opacity: 0, duration: 1.2, ease: "power2.inOut",
-                onComplete: () => { finalizarTransicion(paginaActual, nuevaPagina); }
-            });
-        } else {
-            gsap.set(paginaActual, { zIndex: 1 });
-            gsap.set(nuevaPagina, { 
-                zIndex: 2, transformOrigin: "left center", rotationY: -110, opacity: 0 
-            });
-
-            gsap.to(nuevaPagina, {
-                rotationY: 0, opacity: 1, duration: 1.2, ease: "power2.inOut",
-                onComplete: () => { finalizarTransicion(paginaActual, nuevaPagina); }
-            });
-        }
-    } catch (error) {
-        console.error("Error cargando la página:", error);
-        window.location.href = url;
-    }
+                        page.setAttribute('data-estado-inicial', 'final'); 
+                        
+                        tl.to(sombra, { opacity: 0, duration: 1.2, ease: "power2.inOut" }, 0)
+                          .to(page, {
+                            rotationY: 0,
+                            rotationZ: 0,
+                            xPercent: 0,
+                            opacity: 1,
+                            duration: 1.2,
+                            ease: "power2.inOut",
+                            onComplete: () => sombra.remove()
+                        }, 0);
+                    }
+                });
+            },
+            afterEnter() {
+                transicionEnProceso = false;
+                inicializarMotorDePaneles();
+            }
+        }]
+    });
 }
-
-function finalizarTransicion(paginaVieja, nuevaPagina) {
-    paginaVieja.remove(); 
-    nuevaPagina.id = "contenedor-principal";
-    transicionEnProceso = false;
-    
-    // Al terminar el salto 3D, encendemos el motor de paneles de la nueva hoja
-    inicializarMotorDePaneles();
-}
-
-window.addEventListener('popstate', () => { window.location.reload(); });

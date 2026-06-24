@@ -8,8 +8,8 @@
 </head>
 <body>
 
-    <div class="escenario-3d">
-        <main id="contenedor-principal" class="pagina-comic comic-p3" data-next="page-4.html" data-prev="page-2.html">
+    <div class="escenario-3d" data-barba="wrapper">
+        <main id="contenedor-principal" class="pagina-comic comic-p3" data-barba="container" data-barba-namespace="comic" data-next="page-4.html" data-prev="page-2.html">
             <div class="grupo-paneles">
                 
                 <img src="../assets/images/pagina-3/pag_3_line_1.png" alt="Panel 1" data-reveal="always-on">
@@ -31,6 +31,7 @@
         </main>
     </div>
 
+    <script src="https://unpkg.com/@barba/core"></script>
     <script src="../scripts/modules/gsap.min.js"></script>
     <script src="../scripts/main.js"></script>
 </body>
